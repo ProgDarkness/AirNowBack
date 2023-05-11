@@ -18,7 +18,7 @@ productos = []
 
 @app.get('/')
 async def index():
-  return {'mensaje': 'Bienvenido a la fastAPI'}
+  return {'mensaje': 'Bienvenido a la fastAPI AirNowBack'}
 
 @app.get('/productos')
 async def obtener_productos():
