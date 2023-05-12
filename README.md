@@ -21,15 +21,18 @@ del promp sea CMD o sea PowerShell
 ```sh
 pip install fastapi 
 ```
-Este recurso solo se ejecutara una vez al crear el ambiente
-(en este caso ya esta instalados los paquetes).
+Este recurso solo se ejecutara una vez al crear el ambiente.
 
 # Instalar Servidor 
 ```sh 
 pip install "uvicorn[standard]"
 ```
-Este recurso solo se ejecutara una vez al crear el ambiente
-(en este caso ya esta instalados los paquetes).
+Este recurso solo se ejecutara una vez al crear el ambiente.
+
+# Instalar PAquetes de Conexion a base de datos
+```sh 
+pip install sqlalchemy
+```
 
 # Iniciar Servidor
 ```sh 
