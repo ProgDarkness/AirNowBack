@@ -29,7 +29,7 @@ pip install "uvicorn[standard]"
 ```
 Este recurso solo se ejecutara una vez al crear el ambiente.
 
-# Instalar PAquetes de Conexion a base de datos
+# Instalar Paquetes de Conexion a base de datos
 ```sh 
 pip install sqlalchemy
 ```

@@ -1,11 +1,29 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from uuid import uuid4 as uuid
 from models.modelsItems import *
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+from sqlalchemy.orm import Session
+from database import crud, models, schemas
+from database.database import SessionLocal, engine
 
-# Configuración CORS
+models.Base.metadata.create_all(bind=engine)
+
+# Dependencia
+def get_db():
+  """
+  Obtener session de conexion a la base de datos
+  """
+  db = SessionLocal()
+  try:
+    yield db
+  finally:
+    db.close()
+
+
+app = FastAPI() 
+
+# Configuración CORS 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -13,13 +31,58 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-  
-productos = []
 
 @app.get('/')
-async def index():
+def index():
   return {'mensaje': 'Bienvenido a la fastAPI AirNowBack'}
 
+@app.post('/users/', response_model=schemas.User)
+def create_users(user: schemas.UserCreate, db: Session = Depends(get_db)):
+  # Primero se valida si el email existe
+  db_user = crud.get_user_by_email(db, email=user.email) 
+  
+  if db_user:
+    raise HTTPException(status_code=400, detail="El email ya existe")
+  
+  # luego simplemente se retorna lo que envia la funcion de created_user
+  return crud.created_user(db=db, user=user) 
+
+@app.get('/users/', response_model=list[schemas.User])
+def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+  # obtener todos los usuarios entre unos limites
+  users = crud.get_users(db, skip=skip, limit=limit) 
+  return users
+
+@app.get('/users/{user_id}', response_model=schemas.User)
+def read_user(user_id: int, db: Session = Depends(get_db)):
+  db_user = crud.get_user(db, user_id=user_id) 
+  
+  # Valida si el usuario fue encontrado
+  if db_user is None:
+    raise HTTPException(status_code=404, detail='El usuario no fue encontrado')
+  
+  # retorna el usuario encontrado
+  return db_user
+
+@app.post('/users/{user_id}/items/', response_model=schemas.Item)
+def create_item_for_user(user_id: int, item: schemas.ItemCreated, db: Session = Depends(get_db)):
+  # Crea un item para un usuario
+  return crud.create_user_item(db=db, item=item, user_id=user_id)
+
+@app.get('/items/', response_model=list[schemas.Item])
+def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+  # Busca los Items entre dos limites
+  items = crud.get_items(db, skip=skip, limit=limit) 
+  return items
+
+
+# old code pruebas fastAPI
+
+""" 
+productos = [] 
+"""
+
+""" 
 @app.get('/productos')
 async def obtener_productos():
   return productos
@@ -76,4 +139,5 @@ async def tipos_producto(tipo_producto: TipoProducto):
   if len(resultado):
     return resultado
   
-  raise HTTPException(status_code=404, detail=f"No se encontraron productos de {tipo_producto}")
+  raise HTTPException(status_code=404, detail=f"No se encontraron productos de {tipo_producto}")   
+"""

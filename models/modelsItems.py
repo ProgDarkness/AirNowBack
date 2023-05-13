@@ -1,3 +1,7 @@
+# old code de pruebas de fastAPI
+
+""" 
+
 from pydantic import BaseModel
 from typing import Optional
 from enum import Enum
@@ -13,5 +17,7 @@ class Producto(BaseModel):
 class TipoProducto(str, Enum):
   tecnologico = "Tech"
   moviliario = "House"
-  decoracion = "Decoration"
+  decoracion = "Decoration" 
+
+"""
   
