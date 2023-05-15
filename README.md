@@ -9,6 +9,12 @@ se usara el Framework de FastAPI con el servidor uvicorn, bajo los estandares de
 python -m venv venv
 ```
 
+# Comando para ejecucion de scripts en PowerShell
+```sh
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
+```
+Este comando es para poder ejecutar el ambiente virtual.
+
 # Iniciar Ambiente Virtual en PowerShell
 ```sh
 ./venv/Scripts/Activate.ps1
@@ -32,6 +38,11 @@ Este recurso solo se ejecutara una vez al crear el ambiente.
 # Instalar Paquetes de Conexion a base de datos
 ```sh 
 pip install sqlalchemy
+```
+
+# Instalar Paquetes de Encriptacion de password
+```sh
+pip install cryptography
 ```
 
 # Iniciar Servidor
