@@ -1,13 +1,24 @@
 from fastapi import FastAPI, HTTPException, Depends
-from uuid import uuid4 as uuid
-from models.modelsItems import *
 from fastapi.middleware.cors import CORSMiddleware
+""" from uuid import uuid4 as uuid
+from models.modelsItems import * """
 
 from sqlalchemy.orm import Session
 from database import crud, models, schemas
 from database.database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
+
+app = FastAPI() 
+
+# Configuración CORS 
+app.add_middleware(
+  CORSMiddleware,
+  allow_origins=['*'],
+  allow_credentials=False,
+  allow_methods=['*'],
+  allow_headers=['*'],
+)
 
 # Dependencia
 def get_db():
@@ -19,18 +30,6 @@ def get_db():
     yield db
   finally:
     db.close()
-
-
-app = FastAPI() 
-
-# Configuración CORS 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 @app.get('/')
 def index():
@@ -74,7 +73,6 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
   # Busca los Items entre dos limites
   items = crud.get_items(db, skip=skip, limit=limit) 
   return items
-
 
 # old code pruebas fastAPI
 
